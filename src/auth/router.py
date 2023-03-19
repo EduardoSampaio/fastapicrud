@@ -8,6 +8,7 @@ from fastapi.security import (
 
 from src.config import settings
 from src.auth.utils import (create_refresh_token, get_current_user, create_access_token)
+from src.database import SessionLocal
 
 routerUser = APIRouter(
     prefix="/api/v1",
@@ -18,8 +19,12 @@ routerUser = APIRouter(
 
 
 # Dependency
-def get_db(request: Request):
-    return request.state.db
+def get_db():
+    db = SessionLocal()
+    try:
+        yield db
+    finally:
+        db.close()
 
 
 @routerUser.post("/users/", response_model=schemas.User)
@@ -52,7 +57,7 @@ async def login_for_access_token(form_data: OAuth2PasswordRequestForm = Depends(
     user = crud.authenticate_user(form_data.username, form_data.password, db)
     if not user:
         raise exceptions.token_exception()
-    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN)
     access_token = create_access_token(
         data={"sub": user.email, "scopes": form_data.scopes},
         expires_delta=access_token_expires,
