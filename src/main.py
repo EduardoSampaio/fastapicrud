@@ -1,3 +1,5 @@
+from datetime import timedelta
+
 from fastapi import Depends, FastAPI, Response, Request, HTTPException
 from fastapi_sso.sso.google import GoogleSSO
 from fastapi.middleware.cors import CORSMiddleware
@@ -11,10 +13,13 @@ from starlette.requests import Request as StarletteRequest
 from src.auth.router import routerUser
 from .config import settings
 from src.auth import models, schemas, crud
+from src.produtos import models as modelsProduto
 from .database import SessionLocal, engine
+from src.auth.utils import (get_current_user, get_user, create_access_token, create_refresh_token)
 
 
 models.Base.metadata.create_all(bind=engine)
+modelsProduto.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -58,14 +63,24 @@ async def google_callback(request: StarletteRequest):
     """Process login response from Google and return user info"""
     user = await google_sso.verify_and_process(request)
     request.session["user"] = dict(user)
-    # return {
-    #     "id": user.id,
-    #     "picture": user.picture,
-    #     "display_name": user.display_name,
-    #     "email": user.email,
-    #     "provider": user.provider,
-    # }
-    return RedirectResponse(url='/')
+
+    access_token_expires = timedelta(minutes=settings.ACCESS_TOKEN_EXPIRES_IN)
+    access_token = create_access_token(
+        data={"sub": user.email, "scopes": "openid"},
+        expires_delta=access_token_expires,
+    )
+
+    return {
+        "id": user.id,
+        "picture": user.picture,
+        "display_name": user.display_name,
+        "email": user.email,
+        "provider": user.provider,
+        "access_token": access_token,
+        "refresh_token": create_refresh_token(user.email),
+        "token_type": "bearer"
+    }
+    #return RedirectResponse(url='/')
 
 
 @app.get('/')
