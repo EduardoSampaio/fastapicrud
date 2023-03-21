@@ -14,12 +14,15 @@ from src.auth.router import routerUser
 from .config import settings
 from src.auth import models, schemas, crud
 from src.produtos import models as modelsProduto
+from src.importacoes import models as importacao
+from src.importacoes import service as services
 from .database import SessionLocal, engine
 from src.auth.utils import (get_current_user, get_user, create_access_token, create_refresh_token)
 
 
 models.Base.metadata.create_all(bind=engine)
-modelsProduto.Base.metadata.create_all(bind=engine)
+# modelsProduto.Base.metadata.create_all(bind=engine)
+importacao.Base.metadata.create_all(bind=engine)
 
 app = FastAPI()
 
@@ -52,6 +55,11 @@ google_sso = GoogleSSO(settings.GOOGLE_CLIENT_ID, settings.GOOGLE_CLIENT_SECRET,
                        "http://localhost:8000/google/callback")
 
 
+@app.on_event("startup")
+async def startup_event():
+    services.import_fundos_imobiliarios()
+
+
 @app.get("/google/login", tags=['authentication'])
 async def google_login():
     """Generate login url and redirect"""
@@ -80,7 +88,7 @@ async def google_callback(request: StarletteRequest):
         "refresh_token": create_refresh_token(user.email),
         "token_type": "bearer"
     }
-    #return RedirectResponse(url='/')
+    # return RedirectResponse(url='/')
 
 
 @app.get('/')
