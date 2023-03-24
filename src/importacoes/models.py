@@ -1,12 +1,21 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, Numeric, Text
 from src.database import Base
 
 
 class FundosImobiliarios(Base):
     __tablename__ = "fundos_imobiliarios"
 
-    id = Column("fundo_id", Integer, index=True, primary_key=True)
+    id = Column("FUNDO_ID", Integer, index=True, primary_key=True)
     codigo_do_fundo = Column("CODIGO_DO_FUNDO", String(30), index=True, unique=True, nullable=False)
+    nome = Column("NOME", String(30), nullable=True)
+    descricao = Column("DESCRICAO", Text, nullable=True)
+    imagem = Column("IMAGEM", String, nullable=True)
+    administrador = Column("ADMINISTRADOR", String, nullable=True)
+    cnpj = Column("CNPJ", String, nullable=True)
+    taxa_administracao = Column("TAXA_ADMINISTRACAO", Numeric, nullable=True)
+    taxa_gestao = Column("TAXA_GESTAO", Numeric, nullable=True)
+    taxa_performance = Column("TAXA_PERFORMANCE", Numeric, nullable=True)
+    tipo_gestao = Column("TIPO_GESTAO", String(1), nullable=True)
     setor = Column("SETOR", String(30))
     liquidez_diaria = Column("LIQUIDEZ_DIARIA", Numeric, nullable=True)
     dividendo = Column("DIVIDENDO", Numeric, nullable=True)
@@ -62,3 +71,82 @@ class FundosImobiliarios(Base):
         self.rentab_patr_acumulada = rentab_patr_acumulada
         self.vacancia_financeira = vacancia_financeira
         self.quantidade_ativos = quantidade_ativos
+
+
+class Acao(Base):
+    __tablename__ = "acoes"
+
+    id = Column("ACAO_ID", Integer, index=True, primary_key=True)
+    codigo = Column("CODIGO", String, index=True, unique=True, nullable=False)
+    nome = Column("NOME", String, nullable=True)
+    descricao = Column("DESCRICAO", Text, nullable=True)
+    imagem = Column("IMAGEM", String, nullable=True)
+    pl = Column("PL", Numeric, nullable=True)
+    pvp = Column("PVP", Numeric, nullable=True)
+    psr = Column("PSR", Numeric, nullable=True)
+    dividend_yield = Column("DIVIDEND_YIELD", Numeric, nullable=True)
+    p_ativo = Column("P_ATIVO", Numeric, nullable=True)
+    p_cap_giro = Column("P_CAP_GIRO", Numeric, nullable=True)
+    p_ebit = Column("P_EBIT", Numeric, nullable=True)
+    p_ativ_circ_liq = Column("P_ATIV_CIRC_LIQ", Numeric, nullable=True)
+    ev_ebit = Column("EV_EBIT", Numeric, nullable=True)
+    ev_ebitda = Column("EV_EBITDA", Numeric, nullable=True)
+    margem_ebit = Column("MARGEM_EBIT", Numeric, nullable=True)
+    margem_liquida = Column("MARGEM_LIQUIDA", Numeric, nullable=True)
+    liq_corrente = Column("LIQ_CORRENTE", Numeric, nullable=True)
+    roic = Column("ROIC", Numeric, nullable=True)
+    roe = Column("ROE", Numeric, nullable=True)
+    liq_2meses = Column("LIQ_2MESES", Numeric, nullable=True)
+    patrimonio_liquido = Column("PATRIMONIO_LIQUIDO", Numeric, nullable=True)
+    div_bruta_patrim = Column("DIV_BRUTA_PATRIM", Numeric, nullable=True)
+    cresc_rec_5a = Column("CRESC_REC_5A", Numeric, nullable=True)
+    setor = Column("SETOR", String, nullable=False)
+    lpa = Column("LPA", Numeric, nullable=True)
+    vpa = Column("VPA", Numeric, nullable=True)
+    cnpj = Column("CNPJ", String, nullable=True)
+
+    def __init__(self,
+                 codigo,
+                 pl,
+                 pvp,
+                 psr,
+                 dividend_yield,
+                 p_ativo,
+                 p_cap_giro,
+                 p_ebit,
+                 p_ativ_circ_liq,
+                 ev_ebit,
+                 ev_ebitda,
+                 margem_ebit,
+                 margem_liquida,
+                 liq_corrent,
+                 roic,
+                 roe,
+                 liq_2meses,
+                 patrimonio_liquido,
+                 div_bruta_patrim,
+                 cresc_rec_5a,
+                 setor
+
+                 ):
+        self.codigo = codigo
+        self.pl = pl
+        self.pvp = pvp
+        self.psr = psr
+        self.dividend_yield = dividend_yield
+        self.p_ativo = p_ativo
+        self.p_cap_giro = p_cap_giro
+        self.p_ebit = p_ebit
+        self.p_ativ_circ_liq = p_ativ_circ_liq
+        self.ev_ebit = ev_ebit
+        self.ev_ebitda = ev_ebitda
+        self.margem_ebit = margem_ebit
+        self.margem_liquida = margem_liquida
+        self.liq_corrent = liq_corrent
+        self.roic = roic
+        self.roe = roe
+        self.liq_2meses = liq_2meses
+        self.patrimonio_liquido = patrimonio_liquido
+        self.div_bruta_patrim = div_bruta_patrim
+        self.cresc_rec_5a = cresc_rec_5a
+        self.setor = setor

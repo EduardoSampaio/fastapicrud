@@ -58,6 +58,7 @@ google_sso = GoogleSSO(settings.GOOGLE_CLIENT_ID, settings.GOOGLE_CLIENT_SECRET,
 @app.on_event("startup")
 async def startup_event():
     services.import_fundos_imobiliarios()
+    services.import_acoes()
 
 
 @app.get("/google/login", tags=['authentication'])

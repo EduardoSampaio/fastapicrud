@@ -16,7 +16,7 @@ class Settings(BaseSettings):
     GOOGLE_CLIENT_SECRET: str = os.environ.get("GOOGLE_CLIENT_SECRET")
 
     class Config:
-        env_file = '../.env'
+        env_file = '../../Projeto TCC/src/infoinvestbr/.env'
         env_file_encoding = "utf-8"
 
 

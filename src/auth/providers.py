@@ -11,7 +11,7 @@ from authlib.integrations.starlette_client import OAuth
 
 
 # Initialize our OAuth instance from the client ID and client secret specified in our .env file
-config = Config('../../.env')
+config = Config('../../../Projeto TCC/src/infoinvestbr/.env')
 oauth = OAuth(config)
 
 CONF_URL = 'https://accounts.google.com/.well-known/openid-configuration'

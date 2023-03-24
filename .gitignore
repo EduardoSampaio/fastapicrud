@@ -14,7 +14,7 @@ test.db
 log.txt
 Pipfile.lock
 env3.*
-.env
+../Projeto TCC/src/infoinvestbr/.env
 docs_build
 venv
 docs.zip
